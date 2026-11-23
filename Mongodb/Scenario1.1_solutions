@@ -1,0 +1,99 @@
+Last login: Sun Nov 22 09:31:42 on ttys001
+Matching Java Virtual Machines (1):
+    25 (arm64) "Oracle Corporation" - "Java SE 25" /Library/Java/JavaVirtualMachines/jdk-25.jdk/Contents/Home
+(base) gautam_kumar@Gautams-MacBook-Air ~ % mongosh "mongodb+srv://gautam.w5gnhat.mongodb.net/" --apiVersion 1 --username gautamprajapat5608_db_user --password Z925G2iQ8wYQuFM4
+Current Mongosh Log ID: 6aa7f89d85cc94235752e719
+Current Mongosh Log ID:	6b03b74cc6da53ab391c2479
+Connecting to:		mongodb+srv://<credentials>@gautam.w5gnhat.mongodb.net/?appName=mongosh+2.10.0
+Using MongoDB:		8.0.39 (API Version 1)
+Using Mongosh:		2.10.0
+mongosh 2.14.3 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+Requirement 1. Create database college and insert one student (insertOne):
+Atlas atlas-hlruvh-shard-0 [primary] test> use college
+| 
+
+2. Insert four more students (insertMany):
+
+| db.students.insertOne({ rollNo: 101, name: "Arun", dept: "CSE", marks: 78, city: "Chennai" })
+switched to db college
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.insertMany([
+|   { rollNo: 102, name: "Bala", dept: "ECE", marks: 74, city: "Madurai" },
+|   { rollNo: 103, name: "Karthik", dept: "CSE", marks: 62, city: "Chennai" },
+|   { rollNo: 104, name: "Divya", dept: "IT", marks: 85, city: "Coimbatore" },
+|   { rollNo: 105, name: "Suresh", dept: "CSE", marks: 91, city: "Trichy" }
+| ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6b03b851c6da53ab391c247a'),
+    '1': ObjectId('6b03b851c6da53ab391c247b'),
+    '2': ObjectId('6b03b851c6da53ab391c247c'),
+    '3': ObjectId('6b03b851c6da53ab391c247d')
+  }
+}
+
+3. Display all students, then display only CSE students:
+
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.find()
+| 
+| db.students.find({ dept: "CSE" })
+[
+  {
+    _id: ObjectId('6b03b851c6da53ab391c247b'),
+    rollNo: 103,
+    name: 'Karthik',
+    dept: 'CSE',
+    marks: 62,
+    city: 'Chennai'
+  },
+  {
+    _id: ObjectId('6b03b851c6da53ab391c247d'),
+    rollNo: 105,
+    name: 'Suresh',
+    dept: 'CSE',
+    marks: 91,
+    city: 'Trichy'
+  }
+]
+
+4. Correct the marks of roll number 103 to 68:
+
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.updateOne(
+|   { rollNo: 103 },
+|   { $set: { marks: 68 } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+5. Add a field semester with value 3 to every CSE student:
+
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.updateMany(
+|   { dept: "CSE" },
+|   { $set: { semester: 3 } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+
+6. Delete the record of roll number 104:
+
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.deleteOne({ rollNo: 104 })
+{ acknowledged: true, deletedCount: 1 }
+
+7. Display the total number of students that remain:
+
+Atlas atlas-hlruvh-shard-0 [primary] college> db.students.countDocuments()
+11
